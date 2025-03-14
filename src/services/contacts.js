@@ -14,6 +14,10 @@ export const getAllContacts = async ({
     contactQuery.where('isFavourite').in(filter.isFavourite);
   }
 
+  if (filter.contactType) {
+    contactQuery.where('contactType').equals(filter.contactType);
+  }
+
   const [total, contacts] = await Promise.all([
     ContactsCollection.countDocuments(contactQuery),
     contactQuery
