@@ -7,7 +7,6 @@ function parseSortBy(value) {
     'name',
     'phoneNumber',
     'email',
-    'isFavourite',
     'contactType',
     'createdAt',
   ];
