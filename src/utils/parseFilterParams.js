@@ -8,21 +8,20 @@ function parseIsFavourite(value) {
   }
 }
 
-function parseContactType(contactType) {
-  const isString = typeof contactType === 'string';
+function parseType(type) {
+  const isString = typeof type === 'string';
   if (!isString) return;
-  const isContactType = (contactType) =>
-    ['work', 'home', 'personal'].includes(contactType);
+  const isContactType = (type) => ['work', 'home', 'personal'].includes(type);
 
-  if (isContactType(contactType)) return contactType;
+  if (isContactType(type)) return type;
 }
 
 export function parseFilterParams(query) {
-  const { contactType, isFavourite } = query;
+  const { type, isFavourite } = query;
   const parsedIsFavourite = parseIsFavourite(isFavourite);
-  const parsedContactType = parseContactType(contactType);
+  const parsedType = parseType(type);
   return {
-    contactType: parsedContactType,
+    type: parsedType,
     isFavourite: parsedIsFavourite,
   };
 }

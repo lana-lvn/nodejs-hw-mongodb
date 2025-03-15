@@ -14,11 +14,11 @@ export const getAllContacts = async ({
     contactQuery.where('isFavourite').in(filter.isFavourite);
   }
 
-  if (filter.contactType) {
-    contactQuery.where('contactType').equals(filter.contactType);
+  if (filter.type) {
+    contactQuery.where('contactType').equals(filter.type);
   }
 
-  const [total, contacts] = await Promise.all([
+  const [total, data] = await Promise.all([
     ContactsCollection.countDocuments(contactQuery),
     contactQuery
       .sort({ [sortBy]: sortOrder })
@@ -28,7 +28,7 @@ export const getAllContacts = async ({
   const totalPages = Math.ceil(total / perPage);
 
   return {
-    contacts,
+    data,
     total,
     page,
     perPage,
