@@ -1,3 +1,8 @@
+import * as fs from 'node:fs/promises';
+import path from 'node:path';
+
+import createHttpError from 'http-errors';
+
 import {
   createContact,
   deleteContact,
@@ -5,11 +10,10 @@ import {
   getContactById,
   patchContact,
 } from '../services/contacts.js';
+
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
-
-import createHttpError from 'http-errors';
 
 export const getContactsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
@@ -50,9 +54,14 @@ export const getContactByIdController = async (req, res, _next) => {
 };
 
 export const createContactController = async (req, res) => {
+  await fs.rename(
+    req.file.path,
+    path.resolve('src', 'uploads', req.file.filename),
+  );
   const contact = await createContact({
     ...req.body,
     userId: req.user.id,
+    photo: req.file.name,
   });
   res.status(201).json({
     status: 201,
