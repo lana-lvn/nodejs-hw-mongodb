@@ -1,4 +1,5 @@
 import { THIRTY_DAYS } from '../constants/index.js';
+
 import {
   loginUser,
   logoutUser,
@@ -83,6 +84,7 @@ export const resetPasswordController = async (req, res) => {
   const { token, password } = req.body;
 
   await resetPassword(token, password);
+
   res.send({
     status: 200,
     message: 'Password has been successfully reset.',
