@@ -56,22 +56,25 @@ export const getContactByIdController = async (req, res, _next) => {
 };
 
 export const createContactController = async (req, res) => {
-  let photo = null;
-  if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
-    const result = await uploadToCloudinary(req.file.path);
-    photo = result.secure_url;
-  } else {
-    await fs.rename(
-      req.file.path,
-      path.resolve('src', 'uploads', req.file.filename),
-    );
-    photo = `http://localhost:3000/uploads/${req.file.filename}`;
+  const photo = req.file;
+  let photoUrl = null;
+  if (photo) {
+    if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
+      const result = await uploadToCloudinary(photo.path);
+      photoUrl = result.secure_url;
+    } else {
+      await fs.rename(
+        photo.path,
+        path.resolve('src', 'uploads', photo.filename),
+      );
+      photoUrl = `http://localhost:3000/uploads/${photo.filename}`;
+    }
   }
 
   const contact = await createContact({
     ...req.body,
     userId: req.user.id,
-    photo,
+    photo: photoUrl,
   });
   res.status(201).json({
     status: 201,
@@ -82,8 +85,26 @@ export const createContactController = async (req, res) => {
 
 export const patchContactController = async (req, res, next) => {
   const userId = req.user.id;
+  const photo = req.file;
+  let photoUrl = null;
+  if (photo) {
+    if (getEnvVar('UPLOAD_TO_CLOUDINARY') === 'true') {
+      const result = await uploadToCloudinary(photo.path);
+      photoUrl = result.secure_url;
+    } else {
+      await fs.rename(
+        photo.path,
+        path.resolve('src', 'uploads', photo.filename),
+      );
+      photoUrl = `http://localhost:3000/uploads/${photo.filename}`;
+    }
+  }
+
   const { contactId } = req.params;
-  const result = await patchContact(contactId, userId, req.body);
+  const result = await patchContact(contactId, userId, {
+    ...req.body,
+    photo: photoUrl,
+  });
 
   if (!result) {
     throw new createHttpError(404, 'Contact not found');
