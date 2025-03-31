@@ -5,19 +5,18 @@ import createHttpError from 'http-errors';
 import { randomBytes } from 'crypto';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import Handlebars from 'handlebars';
+import handlebars from 'handlebars';
 
 import { UserCollection } from '../db/models/user.js';
 import { SessionsCollection } from '../db/models/session.js';
 
-import { FIFTEEN_MINUTES, THIRTY_DAYS } from '../constants/index.js';
+import {
+  FIFTEEN_MINUTES,
+  TEMPLATES_DIR,
+  THIRTY_DAYS,
+} from '../constants/index.js';
 import { sendEmail } from '../utils/sendEmail.js';
 import { getEnvVar } from '../utils/getEnvVar.js';
-
-const RESET_PASSWORD_TEMPLATE = fs.readFileSync(
-  path.resolve('src/templates/reset-password.hbs'),
-  { encoding: 'utf-8' },
-);
 
 const createSession = () => {
   const accessToken = randomBytes(30).toString('base64');
@@ -107,10 +106,25 @@ export const requestPasswordReset = async (email) => {
     },
   );
 
-  const template = Handlebars.compile(RESET_PASSWORD_TEMPLATE);
-  const link = `${getEnvVar('APP_DOMAIN')}/reset-password?token=${resetToken}`;
-  await sendEmail(email, 'Reset your password', template({ link }));
+  const resetPasswordTemplatePath = path.join(
+    TEMPLATES_DIR,
+    'reset-password.hbs',
+  );
+
+  const templateSource = fs.readFileSync(
+    path.resolve(resetPasswordTemplatePath),
+    { encoding: 'utf-8' },
+  );
+
+  const template = handlebars.compile(templateSource);
+  const html = template({
+    name: user.name,
+    link: `${getEnvVar('APP_DOMAIN')}/reset-pwd?token=${resetToken}`,
+  });
+
+  await sendEmail(email, 'Reset your password', html);
 };
+
 export const resetPassword = async (token, newPassword) => {
   try {
     const decoded = jwt.verify(token, getEnvVar('JWT_SECRET'));
