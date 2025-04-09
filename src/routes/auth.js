@@ -1,6 +1,7 @@
 import express from 'express';
 import { validateBody } from '../middlewares/validateBody.js';
 import {
+  confirmOAuthSchema,
   loginUserSchema,
   registerUserSchema,
   requestPaswordResetSchema,
@@ -14,6 +15,8 @@ import {
   registerUserController,
   requestPasswordResetController,
   resetPasswordController,
+  getOAuthUrlController,
+  confirmOAuthController,
 } from '../controllers/auth.js';
 
 const router = express.Router();
@@ -47,5 +50,13 @@ router.post(
   jsonParser,
   validateBody(resetPasswordSchema),
   ctrlWrapper(resetPasswordController),
+);
+
+router.get('/get-oauth-url', ctrlWrapper(getOAuthUrlController));
+router.post(
+  '/confirm-oauth',
+  jsonParser,
+  validateBody(confirmOAuthSchema),
+  ctrlWrapper(confirmOAuthController),
 );
 export default router;
