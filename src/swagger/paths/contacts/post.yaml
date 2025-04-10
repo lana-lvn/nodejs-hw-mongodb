@@ -1,0 +1,87 @@
+tags:
+  - Contacts
+summary: Create contact
+operationId: createContact
+description: Create contact
+security:
+  - bearerAuth: []
+requestBody:
+  content:
+    multipart/form-data:
+      schema:
+        type: object
+        required:
+          - _id
+          - name
+          - phoneNumber
+          - contactType
+          - userId
+        properties:
+          _id:
+            type: string
+            description: contact id
+            example: 67f66c0c833cc3418ea6469e
+          name:
+            type: string
+            description: contact name
+            example: John Doe
+          phoneNumber:
+            type: string
+            description: contact number
+            example: +380680000000
+          contactType:
+            type: string
+            description: contact type
+            enum: ['work', 'home', 'personal']
+            example: work
+          userId:
+            type: string
+            description: contact userId
+            example: 67f66c0c833cc3418ea6469e
+          email:
+            type: string
+            description: email
+            example: johndoe@mail.com
+          isFavourite:
+            type: boolean
+            description: is a contact marked as favourite
+            example: true
+          photo:
+            type: string
+            format: binary
+            description: contact photo url
+            example: https://res.cloudinary.com/ddzhgeqog/image/upload/v1743285304/hhlsme96fkvmdfwafn7d.jpg
+          createdAt:
+            type: string
+            format: date-time
+            description: contact creation time
+            example: 2025-03-29T21:55:05.526+00:00
+          updatedAt:
+            type: string
+            format: date-time
+            description: contact edit time
+            example: 2025-03-29T21:55:05.526+00:00
+responses:
+  '201':
+    description: Created a contact
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: Successfully created a contact
+            data:
+              $ref: ../../components/schemas/contact.yaml
+  '401':
+    $ref: ../../components/responses/401.yaml
+  '500':
+    $ref: ../../components/responses/500.yaml

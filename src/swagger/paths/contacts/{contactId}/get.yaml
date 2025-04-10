@@ -1,32 +1,54 @@
+tags:
+  - Contacts
 summary: Get contact by Id
-operationId: get contact
-description: get contact by id
+operationId: getContact
+description: Get contact by ID
+security:
+  - bearerAuth: []
 parameters:
-  -in: path
-name: contactId
-required: true
-schema:
-  type: string
-  example: 67f66c0c833cc3418ea6469e
-responses:
-'200':
-description: get contact by id
-content: application/json:
-  schema:
-    type: object
-    required: 
-      - status
-      - message
-      - data
-properties:
-  status: 
-    type: integer
-    example: 200
-    message: 
+  - in: path
+    name: contactId
+    required: true
+    schema:
       type: string
-      example: Contact fetched successfully
-
-    data:
-      type: object
-      example: 
-    
+      example: 67f66c0c833cc3418ea6469e
+responses:
+  '200':
+    description: Contact fetched successfully
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Contact fetched successfully
+            data:
+              $ref: ../../../../swagger/components/schemas/contact.yaml
+  '401':
+    $ref: ../../../components/responses/401.yaml
+  '404':
+    description: Contact not found
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              type: integer
+              example: 404
+            message:
+              type: string
+              example: Contact not found
+  '500':
+    $ref: ../../../components/responses/500.yaml

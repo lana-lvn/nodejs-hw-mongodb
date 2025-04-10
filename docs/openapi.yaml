@@ -8,12 +8,25 @@ info:
   description: this is contacts app
 tags:
   # теги, що ви будете використовувати
+  - name: Contacts
+    description: Operations with contacts
 servers:
-  - url: http://localhost:3000
-  - url: #посилання на задеплоєний сайт
+  - url: http://127.0.0.1:3000
+
 paths:
   /contacts/{contactId}:
-    get: $ref: ../swagger/paths/contacts/{contactId}/get.yaml
+    get:
+      $ref: ../src/swagger/paths/contacts/{contactId}/get.yaml
+    patch:
+      $ref: ../src/swagger/paths/contacts/{contactId}/patch.yaml
+    delete:
+      $ref: ../src/swagger/paths/contacts/{contactId}/delete.yaml
+  /contacts:
+    post:
+      $ref: ../src/swagger/paths/contacts/post.yaml
+    get:
+      $ref: ../src/swagger/paths/contacts/get.yaml
+
 components:
   securitySchemes:
     bearerAuth:
