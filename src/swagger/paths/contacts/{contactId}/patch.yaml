@@ -12,17 +12,47 @@ parameters:
     schema:
       type: string
 requestBody:
+  required: true
   content:
-    application/json:
+    multipart/form-data:
       schema:
-        $ref: ../../../components/schemas/contact.yaml
+        type: object
+        properties:
+          name:
+            description: "Contact's name"
+            type: string
+            example: 'John Doe'
+          phoneNumber:
+            description: "Contact's phone number"
+            type: string
+            example: '+380680000000'
+          email:
+            description: "Contact's email address"
+            type: string
+            format: email
+            example: 'john.doe@mail.com'
+          isFavourite:
+            description: 'is contact marked as favourite'
+            type: boolean
+            example: true
+          contactType:
+            description: 'Type of contact'
+            type: string
+            enum: ['work', 'home', 'personal']
+            example: 'work'
+          photo:
+            description: "Contact's photo"
+            type: string
+            format: binary
 responses:
   '200':
-    description: Updated contact
+    description: Successfully updated a contact
     content:
       application/json:
         schema:
           $ref: ../../../components/schemas/contact.yaml
+  '400':
+    description: Bad request, invalid input data
   '401':
     $ref: ../../../components/responses/401.yaml
   '404':
