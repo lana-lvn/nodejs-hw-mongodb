@@ -258,11 +258,9 @@
               "schema": {
                 "type": "object",
                 "required": [
-                  "_id",
                   "name",
                   "phoneNumber",
-                  "contactType",
-                  "userId"
+                  "contactType"
                 ],
                 "properties": {
                   "name": {
