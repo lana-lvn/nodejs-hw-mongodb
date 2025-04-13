@@ -11,11 +11,9 @@ requestBody:
       schema:
         type: object
         required:
-          - _id
           - name
           - phoneNumber
           - contactType
-          - userId
         properties:
           name:
             type: string
